@@ -1,2 +1,2 @@
 @echo off
-start docker build -t chordpro-chromium .
+start docker build -t mdembree/ccpdfgenerator .
