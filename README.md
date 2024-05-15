@@ -15,8 +15,8 @@ You need Docker installed on your machine to run this project. If you don't have
 #### Repository Method
 1. Clone the repository to your local machine.
 2. Navigate to the project directory.
-3. For Mac: Run start-chart-generator.sh.
-   For Windows: Run start-chart-generator.bat.
+3. For Mac: Run build-chart-generator.sh.
+   For Windows: Run build-chart-generator.bat.
 
 #### Zip Folder Method
 1. Download the zip file for the latest release.
