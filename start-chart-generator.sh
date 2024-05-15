@@ -4,5 +4,5 @@
 if ! docker images | grep -q "chordpro-chromium"; then
     docker build -t chordpro-chromium .
 fi
-docker run -p 80:5000 -it --rm -v $(pwd):/data chordpro-chromium &
+docker run -p 80:5000 --rm -v $(pwd):/data chordpro-chromium &
 wait
