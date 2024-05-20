@@ -56,7 +56,7 @@ app.post('/submit', upload, (req, res) => {
             throw new Error('Failed to write chordpro file');
         }
 
-        const command = `${cpnicepdfPath} ${chordproFilePath} ${path.join(__dirname, 'generated-chord-charts', `${outputFileName}.pdf`)} ${transposeValue} chordpro.json`;
+        const command = `${cpnicepdfPath} ${chordproFilePath} ${path.join(__dirname, 'generated-chord-charts', `${outputFileName}.pdf`)} ${transposeValue} ${path.join(__dirname, 'chordpro.json')}`;
         console.log(command);
         exec(command, (error, stdout, stderr) => {
             if (stderr !== null) {

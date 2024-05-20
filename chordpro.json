@@ -566,7 +566,7 @@
 	// Stylesheet links.
 	"styles" : {
 	    "display" : "chordpro.css",
-	    "print"   : "file:///data/nice-chord-charts.css",
+	    "print"   : "./nice-chord-charts.css",
 	},
     },
 
