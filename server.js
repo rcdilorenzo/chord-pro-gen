@@ -20,9 +20,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage }).single('chordproFile');
 
-let outputFileName; // Declare outputFileName as a global variable
-let chordproFilePath; // Declare chordproFilePath as a global variable
-
 // Route for serving the conversion form
 app.get('/', (req, res) => {
     res.sendFile(path.join(html_path, 'ccpdfgenerator.html')); // Update the file path here
@@ -34,8 +31,7 @@ app.post('/submit', upload, (req, res) => {
         console.log(req.body);
 
         const cpnicepdfPath = '/usr/local/bin/cpnicepdf';
-        const { chordproContent, transposeValue } = req.body;
-        outputFileName = req.body.outputFileName;
+        const { chordproContent, transposeValue, outputFileName } = req.body;
 
         if (chordproContent === '' || transposeValue === '' || outputFileName === '') {
             console.log('All fields are required');
@@ -48,7 +44,7 @@ app.post('/submit', upload, (req, res) => {
         }
 
         // Write the textarea content to a .chordpro file
-        chordproFilePath = path.join(__dirname, 'static', 'uploads', `${outputFileName}.chordpro`);
+        const chordproFilePath = path.join(__dirname, 'static', 'uploads', `chordproFile.chordpro`);
         try {
             fs.writeFileSync(chordproFilePath, chordproContent);
         } catch (err) {
@@ -59,30 +55,23 @@ app.post('/submit', upload, (req, res) => {
         const command = `${cpnicepdfPath} ${chordproFilePath} ${path.join(__dirname, 'generated-chord-charts', `${outputFileName}.pdf`)} ${transposeValue} ${path.join(__dirname, 'chordpro.json')}`;
         console.log(command);
         exec(command, (error, stdout, stderr) => {
-            if (stderr !== null) {
+            if (error) {
                 console.log("error: " + stderr);
+                res.send('<script>alert("Conversion Error: did not complete");</script>');
             } else {
-                console.log("success: " + stdout);
+                console.log("success: " + stdout);        
+                const generatedFilePath = path.join(__dirname, 'generated-chord-charts', `${outputFileName}.pdf`);
+                res.setHeader('Content-Type', 'application/pdf');
+                res.sendFile(generatedFilePath);
             }
         });
-
-        const generatedFilePath = path.join(__dirname, 'generated-chord-charts', `${outputFileName}.pdf`);
-        res.setHeader('Content-Type', 'application/pdf');
-        res.sendFile(generatedFilePath, { headers: { 'Content-Disposition': 'inline' } });
     } catch (err) {
         console.error(err);
         // Delete the uploaded file if an error is thrown
-        fs.unlinkSync(chordproFilePath);
+        fs.unlinkSync(path.join(__dirname, 'static', 'uploads', `chordproFile.chordpro`));
         res.send('<script>alert("Conversion Error: did not complete");</script>');
     };
 });
-
-
-// // Set the MIME type for JavaScript files
-// app.get('/static/js/nice-chord-charts.js', (req, res) => {
-//     res.setHeader('Content-Type', 'application/javascript');
-//     res.sendFile(path.join(__dirname, 'static', 'js', 'form.js'));
-// });
 
 // Set the MIME type for CSS files
 app.get('/static/css/ccpdfgenerator.css', (req, res) => {
