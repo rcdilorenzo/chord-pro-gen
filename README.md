@@ -35,7 +35,8 @@ You need Docker installed on your machine to run this project. If you don't have
 2. Enter how much you want to transpose the chord chart (from -12 to 12).
 3. Specify the name of the output file.
 4. Hit the Convert to PDF button.
-5. Upon success the file will be downloaded to the generated-chord-charts folder in the project.
+5. Upon success the file will open in the current tab.
+6. If you hit the previous window button, your previous field will remain filled.
 
 ### Stopping
 1. Close out of the terminal running the Node.js server and the container will close.
