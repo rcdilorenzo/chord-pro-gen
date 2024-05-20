@@ -21,6 +21,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single('chordproFile');
 
 let outputFileName; // Declare outputFileName as a global variable
+let chordproFilePath; // Declare chordproFilePath as a global variable
 
 // Route for serving the conversion form
 app.get('/', (req, res) => {
@@ -31,13 +32,12 @@ app.get('/', (req, res) => {
 app.post('/submit', upload, (req, res) => {
     try {
         console.log(req.body);
-        console.log(req.file.path);
 
         const cpnicepdfPath = '/usr/local/bin/cpnicepdf';
-        const { transposeValue } = req.body;
-        const chordproFilePath = req.file.path;
+        const { chordproContent, transposeValue } = req.body;
+        outputFileName = req.body.outputFileName;
 
-        if (req.file === '' || transposeValue === '' || outputFileName === '') {
+        if (chordproContent === '' || transposeValue === '' || outputFileName === '') {
             console.log('All fields are required');
             throw new Error('All fields are required');
         }
@@ -47,9 +47,16 @@ app.post('/submit', upload, (req, res) => {
             throw new Error('Transpose value must be between -12 and 12');
         }
 
-        outputFileName = req.body.outputFileName; // Assign the value to the global variable
+        // Write the textarea content to a .chordpro file
+        chordproFilePath = path.join(__dirname, 'static', 'uploads', `${outputFileName}.chordpro`);
+        try {
+            fs.writeFileSync(chordproFilePath, chordproContent);
+        } catch (err) {
+            console.error(err);
+            throw new Error('Failed to write chordpro file');
+        }
 
-        const command = `${cpnicepdfPath} ${chordproFilePath} /app/generated-chord-charts/${outputFileName}.pdf ${transposeValue} chordpro.json`;
+        const command = `${cpnicepdfPath} ${chordproFilePath} ${path.join(__dirname, 'generated-chord-charts', `${outputFileName}.pdf`)} ${transposeValue} chordpro.json`;
         console.log(command);
         exec(command, (error, stdout, stderr) => {
             if (stderr !== null) {
@@ -58,13 +65,12 @@ app.post('/submit', upload, (req, res) => {
                 console.log("success: " + stdout);
             }
         });
+
         res.sendFile(path.join(html_path, 'success.html'));
     } catch (err) {
         console.error(err);
         // Delete the uploaded file if an error is thrown
-        if (req.file) {
-            fs.unlinkSync(req.file.path);
-        }
+        fs.unlinkSync(chordproFilePath);
         return res.sendFile(path.join(html_path, 'error.html'));
     };
 });
