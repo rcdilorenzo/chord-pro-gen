@@ -66,12 +66,14 @@ app.post('/submit', upload, (req, res) => {
             }
         });
 
-        res.sendFile(path.join(html_path, 'success.html'));
+        const generatedFilePath = path.join(__dirname, 'generated-chord-charts', `${outputFileName}.pdf`);
+        res.setHeader('Content-Type', 'application/pdf');
+        res.sendFile(generatedFilePath, { headers: { 'Content-Disposition': 'inline' } });
     } catch (err) {
         console.error(err);
         // Delete the uploaded file if an error is thrown
         fs.unlinkSync(chordproFilePath);
-        return res.sendFile(path.join(html_path, 'error.html'));
+        res.send('<script>alert("Conversion Error: did not complete");</script>');
     };
 });
 
@@ -86,12 +88,6 @@ app.post('/submit', upload, (req, res) => {
 app.get('/static/css/ccpdfgenerator.css', (req, res) => {
     res.setHeader('Content-Type', 'text/css');
     res.sendFile(path.join(__dirname, 'static', 'css', 'ccpdfgenerator.css'));
-});
-
-// Set the MIME type for PDF files
-app.get('/download', (req, res) => {
-    res.setHeader('Content-Type', 'application/pdf');
-    res.download(path.join(__dirname, 'generated-chord-charts', `${outputFileName}.pdf`));
 });
 
 // Start the server
