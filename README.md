@@ -28,10 +28,10 @@ You need Docker installed on your machine to run this project. If you don't have
 ### Running
 1. For Mac: Run start-chart-generator.sh.
    For Windows: Run start-chart-generator.bat.
-2. The application should now be running at [http://localhost:80](http://localhost:80).
+2. The application should now be running at [http://localhost:5000](http://localhost:5000).
 
 ### Using the Program
-1. Select from the computer the .chordpro file you generated.
+1. Paste the contents of the .chordpro file you generated into the first field.
 2. Enter how much you want to transpose the chord chart (from -12 to 12).
 3. Specify the name of the output file.
 4. Hit the Convert to PDF button.
