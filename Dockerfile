@@ -39,7 +39,7 @@ RUN npm install
 COPY . .
 
 # Expose the port on which your Node.js app is listening
-EXPOSE 80
+EXPOSE 5000
 
 # Start the Node.js app when the container runs
 CMD [ "npm", "start" ]
