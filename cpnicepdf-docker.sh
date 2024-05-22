@@ -37,7 +37,7 @@ cpnicepdf() {
 }
 
 # Change directory to /data
-cd /data
+cd /data || mkdir -p /data && cd /data
 
 # Call the cpnicepdf function with all the command line arguments
 cpnicepdf $@
