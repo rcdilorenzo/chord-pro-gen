@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Define a function called cpnicepdf
 cpnicepdf() {
@@ -37,7 +38,7 @@ cpnicepdf() {
 }
 
 # Change directory to /data
-cd /data || mkdir -p /data && cd /data
+cd /app
 
 # Call the cpnicepdf function with all the command line arguments
 cpnicepdf $@
