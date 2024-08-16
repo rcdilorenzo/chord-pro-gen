@@ -20,26 +20,25 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the script into the image
-COPY cpnicepdf-docker.sh /usr/local/bin/cpnicepdf
-RUN chmod +x /usr/local/bin/cpnicepdf
+# Install Python and other necessary packages
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip && \
+    apt-get clean
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the package.json file to the working directory
-COPY package.json .
+COPY requirements.txt ./
+RUN pip3 install -r requirements.txt
 
-# Install dependencies
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-RUN apt-get install -y nodejs
-RUN npm install
+COPY src/app.py /app/
 
-# Copy the rest of the application code to the working directory
-COPY . .
+# Download the AWS Lambda Runtime Interface Emulator
+ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/local/bin/aws-lambda-rie
+RUN chmod 755 /usr/local/bin/aws-lambda-rie
 
-# Expose the port on which your Node.js app is listening
-EXPOSE 5000
+# Configure the lambda function handler
+CMD ["app.handler"]
 
-# Start the Node.js app when the container runs
-CMD [ "npm", "start" ]
+# Set the entry point to the RIE
+ENTRYPOINT ["/usr/local/bin/aws-lambda-rie"]

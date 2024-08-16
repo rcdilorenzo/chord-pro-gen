@@ -10,37 +10,6 @@ These instructions will get you a copy of the project up and running on your loc
 
 You need Docker installed on your machine to run this project. If you don't have Docker installed, you can download it from [here](https://www.docker.com/products/docker-desktop/).
 
-### Installing
-
-#### Repository Method
-1. Clone the repository to your local machine.
-2. Navigate to the project directory.
-3. For Mac: Run build-chart-generator.sh.
-   For Windows: Run build-chart-generator.bat.
-
-#### Zip Folder Method
-1. Download the zip file for the latest release.
-2. Extract the folder to the desired location.
-3. Navigate to the project directory.
-4. For Mac: Run build-chart-generator.sh.
-   For Windows: Run build-chart-generator.bat.
-
-### Running
-1. For Mac: Run start-chart-generator.sh.
-   For Windows: Run start-chart-generator.bat.
-2. The application should now be running at [http://localhost:5000](http://localhost:5000).
-
-### Using the Program
-1. Paste the contents of the .chordpro file you generated into the first field.
-2. Enter how much you want to transpose the chord chart (from -12 to 12).
-3. Specify the name of the output file.
-4. Hit the Convert to PDF button.
-5. Upon success the file will open in the current tab.
-6. If you hit the previous window button, your previous field will remain filled.
-
-### Stopping
-1. Close out of the terminal running the Node.js server and the container will close.
-
 ## Built With
 
 - [ChordPro](https://www.chordpro.org/) - A tool to create nice looking printable lead sheets from text files in ChordPro format.
